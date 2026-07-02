@@ -1,0 +1,18 @@
+<script>
+async function verificarRiesgo() {
+    const res = await fetch('/api/sismos');
+    const { sismos } = await res.json();
+    
+    navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude: latU, longitude: lonU } = pos.coords;
+        
+        sismos.forEach(s => {
+            const dist = Math.sqrt((latU-s.lat)**2 + (lonU-s.lon)**2) * 111; // km aprox
+            if(dist < 50) {
+                alert("¡ALERTA! Sismo detectado a " + dist.toFixed(0) + "km. Busca zona segura.");
+            }
+        });
+    });
+}
+setInterval(verificarRiesgo, 30000); // Revisa cada 30 segundos
+</script>
